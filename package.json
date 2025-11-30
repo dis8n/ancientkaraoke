@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "dev": "cd cat-parrot-karaoke && npm run dev",
+    "build": "cd cat-parrot-karaoke && npm run build",
+    "start": "cd cat-parrot-karaoke && npm run start",
+    "lint": "cd cat-parrot-karaoke && npm run lint"
+  },
   "dependencies": {
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
