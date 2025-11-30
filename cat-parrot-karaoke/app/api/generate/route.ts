@@ -114,7 +114,7 @@ export async function POST(req: Request) {
 
     const completion = await openai.chat.completions.create({
       messages: [{ role: 'user', content: prompt }],
-      model: 'gpt-4.1-nano',
+      model: 'gpt-4.1',
       response_format: { type: "json_object" },
     });
 

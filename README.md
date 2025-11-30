@@ -18,7 +18,7 @@
 - **Language**: TypeScript
 - **UI**: React 19
 - **Styling**: Tailwind CSS
-- **AI**: OpenAI API (gpt-3.5-turbo)
+- **AI**: OpenAI API (gpt-4.1)
 - **Icons**: Lucide React
 - **Deployment**: Vercel 
 
@@ -32,7 +32,7 @@
 1. Клонировать репозиторий:
    ```bash
    git clone <repo-url>
-   cd ancientkaraoke
+   cd ancientkaraoke/cat-parrot-karaoke
    ```
 
 2. Установить зависимости:
@@ -56,12 +56,19 @@
 
 ```
 ancientkaraoke/
+│-cat-parrot-karaoke/
 ├── app/
 │   ├── api/
-│   │   └── generate/     # API endpoint для генерации песен
-│   └── page.tsx          # Главная страница с формой
-├── cat-parrot-karaoke/   # Next.js приложение
-└── package.json
+│   │   └── generate/
+│   │       └── route.ts      # Бэкенд: API endpoint, вызывает LLM и отдает JSON
+│   ├── globals.css           # Глобальные стили (Tailwind CSS)
+│   ├── layout.tsx            # Корневой макет (Root Layout)
+│   └── page.tsx              # Фронтенд: UI с формой, анимациями и выводом песни
+├── public/                   # Статические ассеты (иконки, SVG)
+├── next.config.ts            # Конфигурация Next.js
+├── tailwind.config.ts        # Конфигурация Tailwind
+├── tsconfig.json             # Настройки TypeScript
+└── package.json              # Зависимости и скрипты запуска
 ```
 
 ## 🎯 Пример использования
