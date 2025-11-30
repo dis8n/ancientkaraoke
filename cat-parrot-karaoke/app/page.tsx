@@ -6,7 +6,10 @@ import { Music, Mic2, ScrollText, Heart, RotateCcw } from "lucide-react";
 
 // Типы данных ответа
 interface KaraokeResponse {
-  song: string;
+  song: {
+    verse: string;
+    chorus: string;
+  };
   vocalStyle: string;
   lore: string;
   friendship: {
@@ -138,8 +141,19 @@ export default function Home() {
               <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 <Mic2 className="text-pink-600" /> Текст Песни
               </h3>
-              <div className="whitespace-pre-line text-lg font-medium leading-relaxed font-mono">
-                {result.song}
+              <div className="space-y-4 text-lg font-medium leading-relaxed font-mono whitespace-pre-line">
+                <div>
+                  <div className="text-sm font-bold uppercase tracking-wide text-gray-500 mb-1">
+                    Куплет
+                  </div>
+                  <div>{result.song.verse}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-bold uppercase tracking-wide text-gray-500 mb-1">
+                    Припев
+                  </div>
+                  <div>{result.song.chorus}</div>
+                </div>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600 italic flex items-start gap-2">
                 <span>🔊</span> 
