@@ -25,7 +25,7 @@ export default function Home() {
   const [result, setResult] = useState<KaraokeResponse | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const eras = ["Каменный век", "Древний Египет", "Шумеры", "Майя", "Ацтеки", "Средневековье", "Киберпанк 2077"];
+  const eras = ["Каменный век", "Древний Египет", "Шумеры", "Майя", "Ацтеки", "Средневековье"];
   const genres = ["Поп", "Рок", "Баллада", "Регги", "Рэп", "Опера"];
 
   const handleSubmit = async (e: React.FormEvent) => {
