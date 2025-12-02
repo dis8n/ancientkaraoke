@@ -13,9 +13,23 @@ import { generateKaraokePrompt } from "../prompts/karaoke";
 import { karaokeResponseSchema } from "../lib/validations/karaoke";
 import type { KaraokeResponse } from "../types/karaoke";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+/**
+ * Получает или создает OpenAI клиент
+ * Ленивая инициализация для избежания ошибок при отсутствии API ключа
+ */
+function getOpenAIClient(): OpenAI {
+  const apiKey = process.env.OPENAI_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error(
+      "OPENAI_API_KEY не установлен. Пожалуйста, добавьте OPENAI_API_KEY в .env.local"
+    );
+  }
+
+  return new OpenAI({
+    apiKey,
+  });
+}
 
 export interface GenerateKaraokeInput {
   catName: string; // Имя кота
@@ -41,6 +55,9 @@ export async function generateKaraoke(
     data.era,
     data.genre
   );
+
+  // Получаем OpenAI клиент (ленивая инициализация)
+  const openai = getOpenAIClient();
 
   // Отправляем запрос в OpenAI
   const completion = await openai.chat.completions.create({
