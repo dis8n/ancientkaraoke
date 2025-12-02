@@ -1,3 +1,18 @@
+/**
+ * Промпт для генерации караоке через OpenAI
+ * 
+ * Создает детальный промпт с инструкциями для AI:
+ * - Требования к рифмовке (AABB)
+ * - Структура JSON ответа
+ * - Стиль и содержание песни
+ * - Исторический контекст
+ * 
+ * @param catName - Имя кота
+ * @param parrotName - Имя попугая
+ * @param era - Выбранная эпоха
+ * @param genre - Выбранный жанр
+ * @returns Промпт для отправки в OpenAI API
+ */
 export function generateKaraokePrompt(
   catName: string,
   parrotName: string,

@@ -1,3 +1,13 @@
+/**
+ * Сервис генерации караоке через OpenAI API
+ * 
+ * Основная бизнес-логика:
+ * 1. Генерирует промпт на основе входных данных
+ * 2. Отправляет запрос в OpenAI
+ * 3. Парсит JSON ответ
+ * 4. Валидирует ответ через Zod схему
+ * 5. Возвращает валидированные данные
+ */
 import OpenAI from "openai";
 import { generateKaraokePrompt } from "../prompts/karaoke";
 import { karaokeResponseSchema } from "../lib/validations/karaoke";
@@ -8,15 +18,23 @@ const openai = new OpenAI({
 });
 
 export interface GenerateKaraokeInput {
-  catName: string;
-  parrotName: string;
-  era: string;
-  genre: string;
+  catName: string; // Имя кота
+  parrotName: string; // Имя попугая
+  era: string; // Эпоха (Каменный век, Древний Египет и т.д.)
+  genre: string; // Жанр песни (Поп, Рок, Баллада и т.д.)
 }
 
+/**
+ * Генерирует караоке через OpenAI API
+ * 
+ * @param data - Входные данные для генерации
+ * @returns Валидированный ответ от AI с текстом песни, лором и уровнем дружбы
+ * @throws Error если ответ от AI пустой или невалидный
+ */
 export async function generateKaraoke(
   data: GenerateKaraokeInput
 ): Promise<KaraokeResponse> {
+  // Генерируем промпт на основе входных данных
   const prompt = generateKaraokePrompt(
     data.catName,
     data.parrotName,
@@ -24,10 +42,11 @@ export async function generateKaraoke(
     data.genre
   );
 
+  // Отправляем запрос в OpenAI
   const completion = await openai.chat.completions.create({
     messages: [{ role: "user", content: prompt }],
     model: "gpt-4.1",
-    response_format: { type: "json_object" },
+    response_format: { type: "json_object" }, // Требуем JSON формат ответа
   });
 
   const content = completion.choices[0].message.content;
@@ -36,9 +55,10 @@ export async function generateKaraoke(
     throw new Error("Пустой ответ от AI");
   }
 
+  // Парсим JSON ответ
   const parsedData = JSON.parse(content);
 
-  // Валидация ответа через Zod
+  // Валидация ответа через Zod - гарантирует корректную структуру данных
   const validatedData = karaokeResponseSchema.parse(parsedData);
 
   return validatedData;
