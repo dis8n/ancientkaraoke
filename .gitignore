@@ -18,13 +18,24 @@ next-env.d.ts
 .env
 .env.local
 .env*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Testing
 /coverage
+*.lcov
 
 # Production
 /build
 /dist
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # Misc
 .DS_Store
@@ -36,7 +47,14 @@ next-env.d.ts
 .idea/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
 
 # Vercel
 .vercel
 
+# Prisma (для будущей интеграции)
+prisma/migrations/
+
+# Cursor AI
+.cursor/
