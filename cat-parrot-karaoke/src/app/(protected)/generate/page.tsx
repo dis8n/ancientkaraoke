@@ -4,12 +4,14 @@
  * Страница генерации караоке
  * 
  * Композиция компонентов:
+ * - Header - шапка с навигацией и кнопкой выхода
  * - KaraokeForm - форма для ввода данных
  * - KaraokeResult - отображение результата генерации
  * 
  * Управляет состоянием формы и результата, отправляет запрос на генерацию
  */
 import { useState } from "react";
+import { Header } from "@/components/shared/Header";
 import { KaraokeForm, KaraokeResult } from "@/components/features/karaoke";
 import type { KaraokeResponse, KaraokeFormData } from "@/types/karaoke";
 
@@ -57,17 +59,19 @@ export default function GeneratePage() {
   };
 
   return (
-    <main className="min-h-screen bg-background p-6">
-      <div className="max-w-4xl mx-auto">
-        {/* Заголовок */}
-        <header className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-            Генерация Караоке
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Создайте уникальную песню для дуэта кота и попугая
-          </p>
-        </header>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Заголовок */}
+          <header className="text-center mb-10 mt-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
+              Генерация Караоке
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Создайте уникальную песню для дуэта кота и попугая
+            </p>
+          </header>
 
         {/* Форма ввода */}
         <KaraokeForm
@@ -78,10 +82,11 @@ export default function GeneratePage() {
           onSubmit={handleSubmit}
         />
 
-        {/* Результат */}
-        {result && <KaraokeResult result={result} />}
-      </div>
-    </main>
+          {/* Результат */}
+          {result && <KaraokeResult result={result} />}
+        </div>
+      </main>
+    </div>
   );
 }
 

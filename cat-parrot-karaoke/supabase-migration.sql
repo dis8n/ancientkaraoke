@@ -86,3 +86,26 @@ CREATE POLICY "Users can insert own leaderboard entries"
   ON leaderboard_entries FOR INSERT
   WITH CHECK (auth.uid()::text = user_id::text);
 
+-- Триггер для автоматического создания записи пользователя в таблице users
+-- при регистрации через Supabase Auth
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.users (id, email, created_at, updated_at)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    NOW(),
+    NOW()
+  )
+  ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Создание триггера на таблице auth.users
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION public.handle_new_user();
+

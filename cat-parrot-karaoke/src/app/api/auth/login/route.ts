@@ -37,14 +37,18 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!data.user) {
+    if (!data.user || !data.session) {
       return NextResponse.json(
         { error: "Пользователь не найден" },
         { status: 401 }
       );
     }
 
-    return NextResponse.json({ success: true });
+    // Создаем ответ с успешным статусом
+    // Supabase SSR автоматически установит куки через createClient()
+    const response = NextResponse.json({ success: true });
+    
+    return response;
   } catch (error) {
     if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(

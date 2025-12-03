@@ -1,13 +1,37 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
 
 /**
  * Landing Page - главная страница приложения
  * 
  * Минималистичный дизайн с кнопками для входа и регистрации.
  * Следует принципам Clean Aesthetic: монохромная палитра, без градиентов и эмодзи.
+ * 
+ * Если пользователь уже авторизован, автоматически редиректит на /generate
  */
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        router.push("/generate");
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
       <div className="max-w-2xl w-full space-y-12">

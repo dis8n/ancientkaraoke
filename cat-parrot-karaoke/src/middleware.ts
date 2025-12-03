@@ -9,7 +9,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
+  const response = NextResponse.next({
     request: {
       headers: request.headers,
     },
@@ -34,9 +34,11 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // Обновляем сессию пользователя
+  // Проверяем авторизацию через getUser() - это проверяет валидность токена на сервере Supabase
+  // getSession() может вернуть старую сессию из кук, даже если она недействительна
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
   // Публичные роуты (доступны без авторизации)
@@ -49,15 +51,18 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   );
 
+  // Если есть ошибка авторизации или пользователь не найден, считаем его неавторизованным
+  const isAuthenticated = user && !authError;
+
   // Если пользователь не авторизован и пытается зайти на защищенный роут
-  if (isProtectedRoute && !user) {
+  if (isProtectedRoute && !isAuthenticated) {
     const redirectUrl = new URL("/login", request.url);
     redirectUrl.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
   // Если пользователь авторизован и пытается зайти на страницы входа/регистрации
-  if (user && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
+  if (isAuthenticated && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
     return NextResponse.redirect(new URL("/generate", request.url));
   }
 
@@ -71,9 +76,10 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - api routes (API routes handle their own auth)
      * - public folder
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
 

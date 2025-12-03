@@ -18,7 +18,7 @@ export const loginSchema = z.object({
 export type LoginFormData = z.infer<typeof loginSchema>;
 
 /**
- * Схема валидации для регистрации
+ * Схема валидации для регистрации (форма)
  */
 export const signupSchema = z.object({
   email: z.string().email("Введите корректный email адрес"),
@@ -30,6 +30,16 @@ export const signupSchema = z.object({
 });
 
 export type SignupFormData = z.infer<typeof signupSchema>;
+
+/**
+ * Схема валидации для API регистрации (без confirmPassword)
+ */
+export const signupApiSchema = z.object({
+  email: z.string().email("Введите корректный email адрес"),
+  password: z.string().min(6, "Пароль должен содержать минимум 6 символов"),
+});
+
+export type SignupApiData = z.infer<typeof signupApiSchema>;
 
 /**
  * Схема валидации email для восстановления пароля

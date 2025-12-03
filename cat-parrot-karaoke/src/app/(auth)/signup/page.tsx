@@ -49,10 +49,14 @@ export default function SignupPage() {
         router.push("/generate");
         router.refresh();
       } else {
-        setError(result.error || "Ошибка при регистрации. Попробуйте позже.");
+        // Показываем детальное сообщение об ошибке
+        const errorMessage = result.error || "Ошибка при регистрации. Попробуйте позже.";
+        setError(errorMessage);
+        console.error("Signup error:", result);
       }
     } catch (error) {
-      setError("Что-то пошло не так. Попробуйте позже.");
+      console.error("Signup request error:", error);
+      setError("Что-то пошло не так. Проверьте подключение к интернету и попробуйте позже.");
     } finally {
       setLoading(false);
     }
