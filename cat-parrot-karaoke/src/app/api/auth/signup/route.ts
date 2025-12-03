@@ -58,19 +58,25 @@ export async function POST(request: Request) {
           email: validatedData.email,
         },
       });
-      console.log("User created in database via Prisma");
+      console.log(`✓ User created in database via Prisma: ${validatedData.email} (${data.user.id})`);
     } catch (dbError: any) {
       // Если пользователь уже существует в БД, это нормально
       if (dbError?.code === "P2002") {
         // Unique constraint violation - user already exists
-        console.log("User already exists in database, continuing...");
+        console.log(`✓ User already exists in database: ${validatedData.email}`);
       } else if (dbError?.message?.includes("Can't reach database server")) {
         // Проблема с подключением к БД - не критично, пользователь создан в Supabase Auth
-        console.warn("Could not connect to database via Prisma. User is created in Supabase Auth.");
-        console.warn("Consider setting up a Supabase trigger to auto-create user records.");
+        console.warn("⚠ Could not connect to database via Prisma. User is created in Supabase Auth.");
+        console.warn("⚠ Consider setting up a Supabase trigger to auto-create user records.");
+        console.warn("⚠ Or run sync script: npx tsx src/scripts/sync-users.ts");
       } else {
-        console.error("Database error:", dbError);
+        console.error("✗ Database error while creating user:", {
+          code: dbError?.code,
+          message: dbError?.message,
+          meta: dbError?.meta,
+        });
         // Не прерываем процесс, так как пользователь уже создан в Supabase Auth
+        // Но логируем детальную информацию для отладки
       }
     }
 

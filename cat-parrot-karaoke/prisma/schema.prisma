@@ -15,10 +15,10 @@ datasource db {
 }
 
 model User {
-  id        String      @id @default(uuid())
-  email     String      @unique
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
+  id        String      @id @default(uuid()) @map("id")
+  email     String      @unique @map("email")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
   
   generations Generation[]
   leaderboardEntries LeaderboardEntry[]
@@ -27,12 +27,12 @@ model User {
 }
 
 model Generation {
-  id             String   @id @default(uuid())
-  userId         String
-  promptData     Json     // Данные запроса (catName, parrotName, era, genre)
-  resultText     String   // Текст сгенерированной песни
-  friendshipScore Int      // Очки дружбы (0-100)
-  createdAt      DateTime @default(now())
+  id             String   @id @default(uuid()) @map("id")
+  userId         String   @map("user_id")
+  promptData     Json     @map("prompt_data") // Данные запроса (catName, parrotName, era, genre)
+  resultText     String   @map("result_text") // Текст сгенерированной песни
+  friendshipScore Int      @map("friendship_score") // Очки дружбы (0-100)
+  createdAt      DateTime @default(now()) @map("created_at")
   
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   leaderboardEntry LeaderboardEntry?
@@ -41,11 +41,11 @@ model Generation {
 }
 
 model LeaderboardEntry {
-  id           String     @id @default(uuid())
-  userId       String
-  generationId String     @unique
-  score        Int        // Очки дружбы из Generation
-  createdAt    DateTime   @default(now())
+  id           String     @id @default(uuid()) @map("id")
+  userId       String     @map("user_id")
+  generationId String     @unique @map("generation_id")
+  score        Int        @map("score") // Очки дружбы из Generation
+  createdAt    DateTime   @default(now()) @map("created_at")
   
   user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   generation   Generation @relation(fields: [generationId], references: [id], onDelete: Cascade)
