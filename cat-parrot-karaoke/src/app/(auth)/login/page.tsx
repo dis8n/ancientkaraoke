@@ -6,7 +6,7 @@
  * Позволяет пользователю войти в систему используя email и пароль.
  * Минималистичный дизайн без градиентов и эмодзи.
  */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,8 +21,16 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const redirect = searchParams.get("redirect") || "/generate";
+  
+  // Проверяем, был ли успешный сброс пароля
+  useEffect(() => {
+    if (searchParams.get("password-reset") === "success") {
+      setSuccessMessage("Пароль успешно обновлен! Теперь вы можете войти с новым паролем.");
+    }
+  }, [searchParams]);
 
   const {
     register,
@@ -73,6 +81,11 @@ export default function LoginPage() {
 
         {/* Форма */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {successMessage && (
+            <div className="bg-green-500/10 text-green-700 dark:text-green-400 text-sm p-3 rounded-md border border-green-500/20">
+              {successMessage}
+            </div>
+          )}
           {error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20">
               {error}

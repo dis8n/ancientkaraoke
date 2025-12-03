@@ -13,11 +13,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { createClient } from "@/lib/supabase/client";
 import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/lib/validations/auth";
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     register,
@@ -29,15 +31,33 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setLoading(true);
+    setError(null);
+
     try {
-      // TODO: Интеграция с Supabase Auth для отправки email восстановления
-      // await supabase.auth.resetPasswordForEmail(data.email)
+      const supabase = createClient();
       
-      // Имитация запроса
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Отправка email для восстановления пароля
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+        data.email,
+        {
+          redirectTo: `${window.location.origin}/reset-password`,
+          // Опционально: можно настроить кастомный email template
+          // emailRedirectTo: `${window.location.origin}/reset-password`,
+        }
+      );
+
+      if (resetError) {
+        console.error("Password reset error:", resetError);
+        setError(resetError.message || "Ошибка при отправке запроса. Попробуйте позже.");
+        return;
+      }
+
+      // Успешно отправлен запрос (даже если email не настроен, Supabase вернет success)
+      console.log("Password reset email sent successfully");
       setIsSubmitted(true);
     } catch (error) {
-      alert("Ошибка при отправке запроса. Попробуйте позже.");
+      console.error("Password reset request error:", error);
+      setError("Что-то пошло не так. Проверьте подключение к интернету и попробуйте позже.");
     } finally {
       setLoading(false);
     }
@@ -78,6 +98,12 @@ export default function ForgotPasswordPage() {
 
         {/* Форма */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {error && (
+            <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input

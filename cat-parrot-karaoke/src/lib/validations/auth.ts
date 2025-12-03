@@ -50,3 +50,16 @@ export const forgotPasswordSchema = z.object({
 
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
+/**
+ * Схема валидации для установки нового пароля
+ */
+export const resetPasswordSchema = z.object({
+  password: z.string().min(6, "Пароль должен содержать минимум 6 символов"),
+  confirmPassword: z.string().min(6, "Пароль должен содержать минимум 6 символов"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Пароли не совпадают",
+  path: ["confirmPassword"],
+});
+
+export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+

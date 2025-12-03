@@ -50,6 +50,8 @@
   - Редирект авторизованных пользователей с `/login` и `/signup` на `/generate`
 - ✅ Созданы страницы и API роуты авторизации (Этап 3)
   - Страницы входа и регистрации (`/login`, `/signup`)
+  - Страница восстановления пароля (`/forgot-password`) с интеграцией Supabase Auth
+  - Страница установки нового пароля (`/reset-password`) с интеграцией Supabase Auth
   - Zod схемы валидации для форм авторизации
   - API роуты: `/api/auth/login`, `/api/auth/signup`, `/api/auth/logout`
   - Интеграция с Supabase Auth (email/password)
@@ -135,7 +137,8 @@ src/
 │   ├── (auth)/                 # Группа роутов авторизации
 │   │   ├── login/              # GET /login - страница входа (будет создана)
 │   │   ├── signup/             # GET /signup - страница регистрации (будет создана)
-│   │   └── forgot-password/   # GET /forgot-password - восстановление пароля
+│   │   ├── forgot-password/   # GET /forgot-password - восстановление пароля
+│   │   └── reset-password/     # GET /reset-password - установка нового пароля
 │   ├── (protected)/            # Защищенные роуты
 │   │   ├── generate/           # GET /generate - страница генерации караоке
 │   │   ├── dashboard/          # GET /dashboard - история генераций пользователя (мой профиль)

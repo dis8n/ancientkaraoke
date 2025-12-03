@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Публичные роуты (доступны без авторизации)
-  const publicRoutes = ["/", "/login", "/signup", "/forgot-password"];
+  const publicRoutes = ["/", "/login", "/signup", "/forgot-password", "/reset-password"];
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
   // Защищенные роуты (требуют авторизации)
