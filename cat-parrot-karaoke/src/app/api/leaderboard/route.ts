@@ -26,9 +26,12 @@ export async function GET(request: Request) {
     const offset = parseInt(searchParams.get("offset") || "0", 10);
 
     // Формируем опции для получения лидерборда
+    const finalLimit = limit > 0 ? limit : 50;
+    const finalOffset = offset >= 0 ? offset : 0;
+    
     const options: LeaderboardOptions = {
-      limit: limit > 0 ? limit : 50,
-      offset: offset >= 0 ? offset : 0,
+      limit: finalLimit,
+      offset: finalOffset,
     };
 
     // Получаем лидерборд и общее количество записей
@@ -40,10 +43,10 @@ export async function GET(request: Request) {
     return NextResponse.json({
       entries,
       pagination: {
-        limit: options.limit,
-        offset: options.offset,
+        limit: finalLimit,
+        offset: finalOffset,
         total,
-        hasMore: options.offset + options.limit < total,
+        hasMore: finalOffset + finalLimit < total,
       },
     });
   } catch (error) {

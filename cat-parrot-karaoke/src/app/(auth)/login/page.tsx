@@ -6,7 +6,7 @@
  * Позволяет пользователю войти в систему используя email и пароль.
  * Минималистичный дизайн без градиентов и эмодзи.
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
@@ -148,6 +148,27 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
+        <div className="max-w-md w-full space-y-8">
+          <header className="text-center space-y-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+              Вход
+            </h1>
+            <p className="text-muted-foreground">
+              Загрузка...
+            </p>
+          </header>
+        </div>
+      </main>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
 
