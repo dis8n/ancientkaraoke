@@ -1,8 +1,12 @@
 /**
  * Типы для Supabase Database
  * 
- * Пока используется базовый тип. После настройки Supabase
- * можно сгенерировать типы через: npx supabase gen types typescript --project-id <project-id>
+ * Используется для типизации Supabase клиентов (Auth).
+ * Для работы с таблицами БД используется Prisma (см. prisma/schema.prisma).
+ * 
+ * Базовый тип достаточен для работы с Supabase Auth.
+ * При необходимости можно сгенерировать полные типы через:
+ * npx supabase gen types typescript --project-id <project-id>
  */
 export type Database = {
   public: {

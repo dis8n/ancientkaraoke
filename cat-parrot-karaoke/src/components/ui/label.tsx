@@ -1,3 +1,8 @@
+/**
+ * Label компонент (Shadcn/UI)
+ * 
+ * Используется для подписей полей ввода в формах.
+ */
 "use client"
 
 import * as React from "react"
