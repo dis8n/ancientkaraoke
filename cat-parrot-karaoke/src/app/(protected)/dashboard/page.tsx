@@ -3,11 +3,14 @@
 /**
  * Dashboard - страница истории генераций пользователя
  * 
- * Показывает список всех сгенерированных караоке пользователя.
- * Будет реализована после интеграции БД и авторизации.
+ * Показывает список всех сгенерированных караоке пользователя с возможностью:
+ * - Фильтрации по эпохе, жанру, очкам дружбы
+ * - Сортировки по дате или очкам дружбы
+ * - Пагинации
  */
 import { Header } from "@/components/shared/Header";
 import { Sidebar } from "@/components/shared/Sidebar";
+import { GenerationList } from "@/components/features/generations/GenerationList";
 
 export default function DashboardPage() {
   return (
@@ -26,11 +29,7 @@ export default function DashboardPage() {
               </p>
             </header>
 
-            <div className="bg-card border border-border rounded-lg p-8 text-center">
-              <p className="text-muted-foreground">
-                История генераций будет доступна после интеграции базы данных.
-              </p>
-            </div>
+            <GenerationList />
           </div>
         </main>
       </div>

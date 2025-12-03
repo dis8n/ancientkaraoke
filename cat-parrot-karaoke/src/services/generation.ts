@@ -98,10 +98,15 @@ export async function getUserGenerations(
   };
 
   // Добавляем фильтры по promptData (JSONB поле)
-  // В Prisma для JSONB полей используем специальный синтаксис
-  // Для упрощения используем простую проверку через строковое сравнение
-  // Более сложная фильтрация по JSONB будет реализована позже при необходимости
-  // TODO: Реализовать фильтрацию по era и genre через JSONB path queries
+  // В Prisma для JSONB полей используем специальный синтаксис через path queries
+  // Фильтрация по era и genre реализована через проверку значений в JSONB
+  if (filters.era || filters.genre) {
+    // Для фильтрации по JSONB полям используем Prisma JsonFilter
+    // К сожалению, Prisma 6.x не поддерживает прямую фильтрацию по вложенным полям JSONB
+    // Поэтому фильтруем на уровне приложения после получения данных
+    // Это не идеально, но работает для текущих требований
+    // В будущем можно использовать raw SQL запросы для более эффективной фильтрации
+  }
 
   // Фильтр по очкам дружбы
   if (filters.minFriendshipScore !== undefined || filters.maxFriendshipScore !== undefined) {
@@ -134,11 +139,11 @@ export async function getUserGenerations(
   const total = await prisma.generation.count({ where });
 
   // Получаем данные с пагинацией
-  const data = await prisma.generation.findMany({
+  let data = await prisma.generation.findMany({
     where,
     orderBy,
     skip,
-    take: limit,
+    take: limit * 2, // Берем больше данных для фильтрации на уровне приложения
     include: {
       user: {
         select: {
@@ -149,14 +154,50 @@ export async function getUserGenerations(
     },
   });
 
-  const totalPages = Math.ceil(total / limit);
+  // Фильтрация по era и genre на уровне приложения (так как Prisma 6.x не поддерживает прямую фильтрацию по JSONB)
+  if (filters.era || filters.genre) {
+    data = data.filter((generation: GenerationWithUser) => {
+      const promptData = generation.promptData as any;
+      if (filters.era && promptData?.era !== filters.era) {
+        return false;
+      }
+      if (filters.genre && promptData?.genre !== filters.genre) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  // Ограничиваем до нужного количества после фильтрации
+  data = data.slice(0, limit);
+
+  // Пересчитываем total с учетом фильтров по era/genre
+  // Для точного подсчета нужно делать отдельный запрос с фильтрацией
+  // Для упрощения используем приблизительное значение
+  let actualTotal = total;
+  if (filters.era || filters.genre) {
+    // Если есть фильтры по era/genre, нужно пересчитать total
+    // Для этого делаем запрос всех записей пользователя и фильтруем
+    const allUserGenerations = await prisma.generation.findMany({
+      where: { userId: filters.userId },
+      select: { promptData: true },
+    });
+    actualTotal = allUserGenerations.filter((gen: { promptData: any }) => {
+      const promptData = gen.promptData as any;
+      if (filters.era && promptData?.era !== filters.era) return false;
+      if (filters.genre && promptData?.genre !== filters.genre) return false;
+      return true;
+    }).length;
+  }
+
+  const totalPages = Math.ceil(actualTotal / limit);
 
   return {
     data,
     pagination: {
       page,
       limit,
-      total,
+      total: actualTotal,
       totalPages,
       hasNext: page < totalPages,
       hasPrev: page > 1,
