@@ -55,6 +55,7 @@ src/
 │   └── prisma.ts               # Prisma Client
 ├── services/                   # Бизнес-логика
 ├── prompts/                    # Промпты для AI
+├── proxy.ts                    # Proxy для защиты роутов (Next.js 16+)
 └── types/                      # TypeScript интерфейсы
 ```
 
