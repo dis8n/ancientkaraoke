@@ -1,0 +1,57 @@
+// Prisma Schema для Cat & Parrot Ancient Karaoke
+// 
+// Модели данных:
+// - User: пользователи приложения
+// - Generation: сгенерированные караоке-хиты
+// - LeaderboardEntry: записи лидерборда
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String      @id @default(uuid())
+  email     String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  generations Generation[]
+  leaderboardEntries LeaderboardEntry[]
+
+  @@map("users")
+}
+
+model Generation {
+  id             String   @id @default(uuid())
+  userId         String
+  promptData     Json     // Данные запроса (catName, parrotName, era, genre)
+  resultText     String   // Текст сгенерированной песни
+  friendshipScore Int      // Очки дружбы (0-100)
+  createdAt      DateTime @default(now())
+  
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  leaderboardEntry LeaderboardEntry?
+
+  @@map("generations")
+}
+
+model LeaderboardEntry {
+  id           String     @id @default(uuid())
+  userId       String
+  generationId String     @unique
+  score        Int        // Очки дружбы из Generation
+  createdAt    DateTime   @default(now())
+  
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  generation   Generation @relation(fields: [generationId], references: [id], onDelete: Cascade)
+
+  @@index([score])
+  @@index([createdAt])
+  @@map("leaderboard_entries")
+}
+
