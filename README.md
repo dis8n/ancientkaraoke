@@ -34,6 +34,10 @@
   - Интеграция с API `/api/generate`
 - ✅ Создана страница истории генераций (`/dashboard`)
   - Заглушка для будущей реализации после интеграции БД
+- ✅ Создана страница восстановления пароля (`/forgot-password`)
+  - Форма ввода email с валидацией через Zod
+  - Использование React Hook Form + Shadcn компонентов
+  - Минималистичный дизайн
 
 ### Следующий этап (Интеграция инфраструктуры)
 - ⏳ Установка и настройка Supabase Auth
@@ -66,6 +70,7 @@
 - **UI Library**: Shadcn/UI (компоненты на базе Radix UI)
 - **Styling**: Tailwind CSS
 - **Validation**: Zod (runtime validation)
+- **Forms**: React Hook Form + @hookform/resolvers
 - **AI**: OpenAI API (gpt-4.1)
 - **Icons**: Lucide React
 - **Utils**: clsx, tailwind-merge, class-variance-authority
@@ -79,9 +84,10 @@ src/
 ├── app/                        # Next.js App Router
 │   ├── api/                    # API Endpoints
 │   │   └── generate/            # POST /api/generate - генерация караоке
-│   ├── (auth)/                 # Группа роутов авторизации (будет создана)
-│   │   ├── login/
-│   │   └── signup/
+│   ├── (auth)/                 # Группа роутов авторизации
+│   │   ├── login/              # GET /login - страница входа (будет создана)
+│   │   ├── signup/             # GET /signup - страница регистрации (будет создана)
+│   │   └── forgot-password/   # GET /forgot-password - восстановление пароля
 │   ├── (protected)/            # Защищенные роуты
 │   │   ├── generate/           # GET /generate - страница генерации караоке
 │   │   └── dashboard/          # GET /dashboard - история генераций пользователя
@@ -95,11 +101,14 @@ src/
 │   │       ├── KaraokeResult.tsx # Отображение результата
 │   │       └── index.ts        # Экспорты модуля
 │   ├── ui/                     # Shadcn компоненты
-│   │   └── button.tsx          # Компонент Button
+│   │   ├── button.tsx          # Компонент Button
+│   │   ├── input.tsx           # Компонент Input
+│   │   └── label.tsx           # Компонент Label
 │   └── shared/                 # Общие компоненты (Header, Sidebar)
 ├── lib/
 │   ├── validations/            # Zod схемы валидации
-│   │   └── karaoke.ts          # Схемы для формы, запроса, ответа
+│   │   ├── karaoke.ts          # Схемы для формы, запроса, ответа
+│   │   └── auth.ts             # Схемы для авторизации (forgotPasswordSchema)
 │   ├── utils.ts                # Утилиты (cn для классов)
 │   ├── supabase/               # Supabase клиенты (будет создано)
 │   │   ├── client.ts           # Клиент для браузера
