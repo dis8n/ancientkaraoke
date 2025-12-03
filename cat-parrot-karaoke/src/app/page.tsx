@@ -1,85 +1,45 @@
-"use client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 /**
- * Главная страница приложения
+ * Landing Page - главная страница приложения
  * 
- * Композиция компонентов:
- * - KaraokeForm - форма для ввода данных
- * - KaraokeResult - отображение результата генерации
- * 
- * Управляет состоянием формы и результата, отправляет запрос на генерацию
+ * Минималистичный дизайн с кнопками для входа и регистрации.
+ * Следует принципам Clean Aesthetic: монохромная палитра, без градиентов и эмодзи.
  */
-import { useState } from "react";
-import { KaraokeForm, KaraokeResult } from "@/components/features/karaoke";
-import type { KaraokeResponse, KaraokeFormData } from "@/types/karaoke";
-
 export default function Home() {
-  // Состояние формы с данными пользователя
-  const [formData, setFormData] = useState<KaraokeFormData>({
-    catName: "",
-    parrotName: "",
-    era: "Каменный век",
-    genre: "Рок",
-  });
-  
-  // Результат генерации от AI
-  const [result, setResult] = useState<KaraokeResponse | null>(null);
-  
-  // Состояние загрузки (пока идет запрос к API)
-  const [loading, setLoading] = useState(false);
-
-  /**
-   * Обработчик отправки формы
-   * Отправляет POST запрос на /api/generate с данными формы
-   */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setResult(null);
-
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setResult(data);
-      } else {
-        alert("Ошибка: " + data.error);
-      }
-    } catch (error) {
-      alert("Что-то пошло не так при вызове духов караоке.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <main className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white p-6 flex flex-col items-center">
-      <div className="max-w-2xl w-full">
+    <main className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
+      <div className="max-w-2xl w-full space-y-12">
         {/* Заголовок */}
-        <header className="text-center mb-10">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500 mb-2">
+        <header className="text-center space-y-4">
+          <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight">
             Cat & Parrot
           </h1>
-          <h2 className="text-xl md:text-2xl font-light opacity-90">
-            Ancient Karaoke 🎤
+          <h2 className="text-xl md:text-2xl font-light text-muted-foreground">
+            Ancient Karaoke
           </h2>
         </header>
 
-        {/* Форма ввода */}
-        <KaraokeForm
-          formData={formData}
-          loading={loading}
-          hasResult={!!result}
-          onFormDataChange={setFormData}
-          onSubmit={handleSubmit}
-        />
+        {/* Описание */}
+        <div className="text-center space-y-2 max-w-md mx-auto">
+          <p className="text-muted-foreground text-lg">
+            Генерируйте древние караоке-хиты для дуэта кота и попугая с помощью AI.
+          </p>
+          <p className="text-muted-foreground text-sm">
+            Выберите эпоху, жанр, имена персонажей — получите уникальную песню с историческим лором и уровнем дружбы.
+          </p>
+        </div>
 
-        {/* Результат */}
-        {result && <KaraokeResult result={result} />}
+        {/* Кнопки действий */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button asChild size="lg" variant="default" className="w-full sm:w-auto min-w-[200px]">
+            <Link href="/login">Войти</Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto min-w-[200px]">
+            <Link href="/signup">Регистрация</Link>
+          </Button>
+        </div>
       </div>
     </main>
   );
