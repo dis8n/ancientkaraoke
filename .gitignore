@@ -9,6 +9,7 @@ node_modules/
 !.yarn/versions
 
 # Next.js
+cat-parrot-karaoke/.next/
 /.next/
 /out/
 next-env.d.ts
