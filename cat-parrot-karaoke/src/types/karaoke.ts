@@ -18,7 +18,7 @@ export interface KaraokeResponse {
   vocalStyle: string; // Описание стиля вокала (1-2 предложения)
   lore: string; // Псевдо-историческая справка о песне в выбранной эпохе
   friendship: {
-    score: number; // Уровень дружбы (-50 до +50)
+    score: number; // Уровень дружбы (0-100)
     reason: string; // Объяснение уровня дружбы
   };
 }

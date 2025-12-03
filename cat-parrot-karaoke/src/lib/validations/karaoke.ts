@@ -11,17 +11,21 @@ import { ERAS, GENRES } from "@/types/karaoke";
 
 /**
  * Схема валидации для формы на клиенте
- * Использует enum для era и genre для строгой проверки
+ * Использует string с refine для era и genre с кастомными сообщениями об ошибках
  */
 export const karaokeFormSchema = z.object({
   catName: z.string().min(1, "Имя кота обязательно"),
   parrotName: z.string().min(1, "Имя попугая обязательно"),
-  era: z.enum([...ERAS] as [string, ...string[]], {
-    message: "Выберите эпоху",
-  }),
-  genre: z.enum([...GENRES] as [string, ...string[]], {
-    message: "Выберите жанр",
-  }),
+  era: z
+    .string()
+    .refine((val) => ERAS.includes(val as typeof ERAS[number]), {
+      message: "Выберите эпоху",
+    }),
+  genre: z
+    .string()
+    .refine((val) => GENRES.includes(val as typeof GENRES[number]), {
+      message: "Выберите жанр",
+    }),
 });
 
 /**
@@ -47,7 +51,7 @@ export const karaokeResponseSchema = z.object({
   vocalStyle: z.string(),
   lore: z.string(),
   friendship: z.object({
-    score: z.number(),
+    score: z.number().min(0).max(100), // Шкала 0-100
     reason: z.string(),
   }),
 });

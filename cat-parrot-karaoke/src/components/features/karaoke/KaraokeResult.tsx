@@ -60,7 +60,7 @@ export function KaraokeResult({ result }: KaraokeResultProps) {
         {/* Уровень дружбы */}
         <div
           className={`rounded-2xl p-6 shadow-lg border-2 text-white flex flex-col justify-center relative overflow-hidden ${
-            result.friendship.score > 0
+            result.friendship.score >= 50
               ? "bg-green-600 border-green-400"
               : "bg-red-600 border-red-400"
           }`}
@@ -70,7 +70,6 @@ export function KaraokeResult({ result }: KaraokeResultProps) {
           </div>
           <h3 className="font-bold mb-1 opacity-90">Уровень Дружбы</h3>
           <div className="text-5xl font-black mb-2">
-            {result.friendship.score > 0 ? "+" : ""}
             {result.friendship.score}
           </div>
           <p className="text-sm font-medium opacity-90 leading-tight">
