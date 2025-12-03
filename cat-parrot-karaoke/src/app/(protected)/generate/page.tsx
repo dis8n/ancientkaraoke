@@ -65,16 +65,16 @@ export default function GeneratePage() {
       <div className="flex">
         <Sidebar />
         <main className="flex-1 p-6">
-          <div className="max-w-4xl mx-auto">
-          {/* Заголовок */}
+      <div className="max-w-4xl mx-auto">
+        {/* Заголовок */}
           <header className="text-center mb-10 mt-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-              Генерация Караоке
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Создайте уникальную песню для дуэта кота и попугая
-            </p>
-          </header>
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
+            Генерация Караоке
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Создайте уникальную песню для дуэта кота и попугая
+          </p>
+        </header>
 
         {/* Форма ввода */}
         <KaraokeForm
@@ -85,10 +85,10 @@ export default function GeneratePage() {
           onSubmit={handleSubmit}
         />
 
-            {/* Результат */}
-            {result && <KaraokeResult result={result} />}
-          </div>
-        </main>
+        {/* Результат */}
+        {result && <KaraokeResult result={result} />}
+      </div>
+    </main>
       </div>
     </div>
   );

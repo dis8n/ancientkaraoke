@@ -57,10 +57,10 @@ export default function Home() {
 
         {/* Кнопки действий */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button asChild size="lg" variant="default" className="w-full sm:w-auto min-w-[200px]">
+          <Button asChild size="lg" variant="default" className="w-full sm:w-auto min-w-[200px] font-semibold">
             <Link href="/login">Войти</Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto min-w-[200px]">
+          <Button asChild size="lg" variant="outline" className="w-full sm:w-auto min-w-[200px] font-medium">
             <Link href="/signup">Регистрация</Link>
           </Button>
         </div>
