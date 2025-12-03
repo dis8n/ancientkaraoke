@@ -3,11 +3,11 @@
 /**
  * Leaderboard - страница лидерборда
  * 
- * Показывает топ пользователей по очкам дружбы.
- * Будет реализована после интеграции БД.
+ * Показывает топ пользователей по очкам дружбы с возможностью пагинации.
  */
 import { Header } from "@/components/shared/Header";
 import { Sidebar } from "@/components/shared/Sidebar";
+import { Leaderboard } from "@/components/features/leaderboard/Leaderboard";
 
 export default function LeaderboardPage() {
   return (
@@ -26,11 +26,7 @@ export default function LeaderboardPage() {
               </p>
             </header>
 
-            <div className="bg-card border border-border rounded-lg p-8 text-center">
-              <p className="text-muted-foreground">
-                Лидерборд будет доступен после интеграции базы данных.
-              </p>
-            </div>
+            <Leaderboard />
           </div>
         </main>
       </div>

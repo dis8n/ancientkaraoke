@@ -17,6 +17,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { karaokeRequestSchema } from "../../../lib/validations/karaoke";
 import { generateKaraoke, saveGenerationToDatabase } from "../../../services/karaoke";
+import { createLeaderboardEntry } from "../../../services/leaderboard";
 
 /**
  * Обработчик POST запроса для генерации караоке
@@ -61,13 +62,30 @@ export async function POST(req: Request) {
 
     // Сохранение генерации в БД через сервис
     // Обрабатываем ошибки БД, но не прерываем процесс - генерация уже выполнена
+    let generationId: string | null = null;
     try {
-      await saveGenerationToDatabase(
+      generationId = await saveGenerationToDatabase(
         user.id,
         { catName, parrotName, era, genre },
         data
       );
       console.log(`✓ Generation saved to database for user ${user.id}`);
+
+      // Создание записи в лидерборде
+      if (generationId) {
+        try {
+          await createLeaderboardEntry(
+            user.id,
+            generationId,
+            data.friendship.score
+          );
+          console.log(`✓ Leaderboard entry created for generation ${generationId}`);
+        } catch (leaderboardError: any) {
+          // Логируем ошибку лидерборда, но не прерываем процесс
+          console.error("Error creating leaderboard entry:", leaderboardError);
+          // Генерация уже сохранена, это не критично
+        }
+      }
     } catch (dbError: any) {
       // Логируем ошибку БД, но не прерываем процесс - генерация уже выполнена
       console.error("Database error while saving generation:", dbError);
