@@ -2,7 +2,7 @@
  * Middleware для защиты роутов
  * 
  * Проверяет авторизацию пользователя через Supabase Auth.
- * Защищает роуты: /generate, /dashboard, /history, /profile
+ * Защищает роуты: /generate, /dashboard, /history, /profile, /leaderboard
  * Редиректит неавторизованных пользователей на /login
  */
 import { createServerClient } from "@supabase/ssr";
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
   // Защищенные роуты (требуют авторизации)
-  const protectedRoutes = ["/generate", "/dashboard", "/history", "/profile"];
+  const protectedRoutes = ["/generate", "/dashboard", "/history", "/profile", "/leaderboard"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );

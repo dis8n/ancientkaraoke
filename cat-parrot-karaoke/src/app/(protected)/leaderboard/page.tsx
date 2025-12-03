@@ -1,15 +1,15 @@
 "use client";
 
 /**
- * Dashboard - страница истории генераций пользователя
+ * Leaderboard - страница лидерборда
  * 
- * Показывает список всех сгенерированных караоке пользователя.
- * Будет реализована после интеграции БД и авторизации.
+ * Показывает топ пользователей по очкам дружбы.
+ * Будет реализована после интеграции БД.
  */
 import { Header } from "@/components/shared/Header";
 import { Sidebar } from "@/components/shared/Sidebar";
 
-export default function DashboardPage() {
+export default function LeaderboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -19,16 +19,16 @@ export default function DashboardPage() {
           <div className="max-w-6xl mx-auto">
             <header className="mb-8">
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
-                Мой профиль
+                Лидерборд
               </h1>
               <p className="text-muted-foreground text-lg">
-                Все ваши созданные караоке-хиты
+                Топ пользователей по очкам дружбы
               </p>
             </header>
 
             <div className="bg-card border border-border rounded-lg p-8 text-center">
               <p className="text-muted-foreground">
-                История генераций будет доступна после интеграции базы данных.
+                Лидерборд будет доступен после интеграции базы данных.
               </p>
             </div>
           </div>

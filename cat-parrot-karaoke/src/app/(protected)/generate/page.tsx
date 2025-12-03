@@ -12,6 +12,7 @@
  */
 import { useState } from "react";
 import { Header } from "@/components/shared/Header";
+import { Sidebar } from "@/components/shared/Sidebar";
 import { KaraokeForm, KaraokeResult } from "@/components/features/karaoke";
 import type { KaraokeResponse, KaraokeFormData } from "@/types/karaoke";
 
@@ -61,8 +62,10 @@ export default function GeneratePage() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="flex">
+        <Sidebar />
+        <main className="flex-1 p-6">
+          <div className="max-w-4xl mx-auto">
           {/* Заголовок */}
           <header className="text-center mb-10 mt-8">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-2">
@@ -82,10 +85,11 @@ export default function GeneratePage() {
           onSubmit={handleSubmit}
         />
 
-          {/* Результат */}
-          {result && <KaraokeResult result={result} />}
-        </div>
-      </main>
+            {/* Результат */}
+            {result && <KaraokeResult result={result} />}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
