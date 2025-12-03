@@ -164,19 +164,30 @@ src/
    OPENAI_API_KEY=your_api_key_here
    
    # Database (Supabase PostgreSQL)
-   DATABASE_URL=postgresql://user:password@host:port/database?schema=public
+   # Найти в Supabase Dashboard: Settings > Database > Connection string
+   # Используйте Direct Connection (для development) или Connection Pooling (для production)
+   DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.your-project.supabase.co:5432/postgres
    
    # Supabase
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
    ```
+   
+   **Важно**: Замените `[YOUR-PASSWORD]` на пароль вашей базы данных из Supabase Dashboard.
+   
+4. Создать таблицы в Supabase:
+   - Откройте Supabase Dashboard → SQL Editor
+   - Выполните SQL из файла `supabase-migration.sql`
+   - Или используйте Prisma: `npx prisma generate && npx prisma db push`
+   
+   Подробная инструкция в файле `SUPABASE_SETUP.md`
 
-4. Запустить dev-сервер:
+5. Запустить dev-сервер:
    ```bash
    npm run dev
    ```
 
-5. Открыть http://localhost:3000 в браузере
+6. Открыть http://localhost:3000 в браузере
 
 ## Переменные окружения
 
