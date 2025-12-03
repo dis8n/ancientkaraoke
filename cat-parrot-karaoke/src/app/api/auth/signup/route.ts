@@ -68,7 +68,6 @@ export async function POST(request: Request) {
         // Проблема с подключением к БД - не критично, пользователь создан в Supabase Auth
         console.warn("⚠ Could not connect to database via Prisma. User is created in Supabase Auth.");
         console.warn("⚠ Consider setting up a Supabase trigger to auto-create user records.");
-        console.warn("⚠ Or run sync script: npx tsx src/scripts/sync-users.ts");
       } else {
         console.error("✗ Database error while creating user:", {
           code: dbError?.code,
