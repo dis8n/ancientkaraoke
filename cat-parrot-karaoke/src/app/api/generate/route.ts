@@ -15,9 +15,8 @@
  */
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { prisma } from "@/lib/prisma";
 import { karaokeRequestSchema } from "../../../lib/validations/karaoke";
-import { generateKaraoke } from "../../../services/karaoke";
+import { generateKaraoke, saveGenerationToDatabase } from "../../../services/karaoke";
 
 /**
  * Обработчик POST запроса для генерации караоке
@@ -60,24 +59,15 @@ export async function POST(req: Request) {
       genre,
     });
 
-    // Сохранение генерации в БД через Prisma
-    // Формируем полный текст песни из verse и chorus
-    const fullSongText = `${data.song.verse}\n\n${data.song.chorus}`;
-    
+    // Сохранение генерации в БД через сервис
+    // Обрабатываем ошибки БД, но не прерываем процесс - генерация уже выполнена
     try {
-      await prisma.generation.create({
-        data: {
-          userId: user.id,
-          promptData: {
-            catName,
-            parrotName,
-            era,
-            genre,
-          },
-          resultText: fullSongText,
-          friendshipScore: data.friendship.score,
-        },
-      });
+      await saveGenerationToDatabase(
+        user.id,
+        { catName, parrotName, era, genre },
+        data
+      );
+      console.log(`✓ Generation saved to database for user ${user.id}`);
     } catch (dbError: any) {
       // Логируем ошибку БД, но не прерываем процесс - генерация уже выполнена
       console.error("Database error while saving generation:", dbError);

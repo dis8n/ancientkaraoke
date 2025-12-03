@@ -7,11 +7,13 @@
  * 3. Парсит JSON ответ
  * 4. Валидирует ответ через Zod схему
  * 5. Возвращает валидированные данные
+ * 6. Сохраняет генерацию в БД (опционально)
  */
 import OpenAI from "openai";
 import { generateKaraokePrompt } from "../prompts/karaoke";
 import { karaokeResponseSchema } from "../lib/validations/karaoke";
 import type { KaraokeResponse } from "../types/karaoke";
+import { prisma } from "../lib/prisma";
 
 /**
  * Получает или создает OpenAI клиент
@@ -79,5 +81,51 @@ export async function generateKaraoke(
   const validatedData = karaokeResponseSchema.parse(parsedData);
 
   return validatedData;
+}
+
+/**
+ * Сохраняет генерацию караоке в базу данных
+ * 
+ * @param userId - ID пользователя, создавшего генерацию
+ * @param promptData - Исходные данные запроса (catName, parrotName, era, genre)
+ * @param karaokeResponse - Ответ от AI с текстом песни и очками дружбы
+ * @returns ID созданной записи в БД
+ * @throws Error если не удалось сохранить в БД
+ */
+export async function saveGenerationToDatabase(
+  userId: string,
+  promptData: GenerateKaraokeInput,
+  karaokeResponse: KaraokeResponse
+): Promise<string> {
+  // Формируем полный текст песни из verse и chorus
+  const fullSongText = `${karaokeResponse.song.verse}\n\n${karaokeResponse.song.chorus}`;
+
+  try {
+    const generation = await prisma.generation.create({
+      data: {
+        userId,
+        promptData: {
+          catName: promptData.catName,
+          parrotName: promptData.parrotName,
+          era: promptData.era,
+          genre: promptData.genre,
+        },
+        resultText: fullSongText,
+        friendshipScore: karaokeResponse.friendship.score,
+      },
+    });
+
+    return generation.id;
+  } catch (error: any) {
+    // Логируем детальную информацию об ошибке
+    console.error("Database error while saving generation:", {
+      code: error?.code,
+      message: error?.message,
+      meta: error?.meta,
+    });
+    
+    // Пробрасываем ошибку дальше, чтобы вызывающий код мог решить, как её обработать
+    throw new Error(`Не удалось сохранить генерацию в БД: ${error?.message || "Неизвестная ошибка"}`);
+  }
 }
 
