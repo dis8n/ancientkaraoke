@@ -38,6 +38,11 @@
   - Форма ввода email с валидацией через Zod
   - Использование React Hook Form + Shadcn компонентов
   - Минималистичный дизайн
+- ✅ Настроена инфраструктура БД и Auth (Этап 1)
+  - Установлены зависимости: `@supabase/supabase-js`, `@supabase/ssr`, `@prisma/client`, `prisma`
+  - Создана Prisma схема с моделями: User, Generation, LeaderboardEntry
+  - Настроен Prisma Client singleton
+  - Созданы Supabase клиенты для браузера и сервера (SSR)
 
 ### Следующий этап (Интеграция инфраструктуры)
 - ⏳ Установка и настройка Supabase Auth
@@ -71,6 +76,9 @@
 - **Styling**: Tailwind CSS
 - **Validation**: Zod (runtime validation)
 - **Forms**: React Hook Form + @hookform/resolvers
+- **Database**: PostgreSQL (Supabase)
+- **ORM**: Prisma
+- **Auth**: Supabase Auth
 - **AI**: OpenAI API (gpt-4.1)
 - **Icons**: Lucide React
 - **Utils**: clsx, tailwind-merge, class-variance-authority
@@ -110,10 +118,10 @@ src/
 │   │   ├── karaoke.ts          # Схемы для формы, запроса, ответа
 │   │   └── auth.ts             # Схемы для авторизации (forgotPasswordSchema)
 │   ├── utils.ts                # Утилиты (cn для классов)
-│   ├── supabase/               # Supabase клиенты (будет создано)
+│   ├── supabase/               # Supabase клиенты
 │   │   ├── client.ts           # Клиент для браузера
 │   │   └── server.ts           # Клиент для сервера (SSR)
-│   └── prisma.ts               # Prisma Client singleton (будет создано)
+│   └── prisma.ts               # Prisma Client singleton
 ├── services/                   # Бизнес-логика (domain services)
 │   └── karaoke.ts              # Генерация караоке через OpenAI
 ├── prompts/                    # Промпты для AI (версионируемые)
@@ -134,6 +142,8 @@ src/
 
 1. Node.js 18+
 2. OpenAI API Key
+3. Supabase проект (для БД и Auth)
+4. PostgreSQL база данных (через Supabase)
 
 ## 🚀 Локальный запуск
 
@@ -150,7 +160,15 @@ src/
 
 3. Создать файл `.env.local` в корне проекта:
    ```bash
+   # OpenAI API
    OPENAI_API_KEY=your_api_key_here
+   
+   # Database (Supabase PostgreSQL)
+   DATABASE_URL=postgresql://user:password@host:port/database?schema=public
+   
+   # Supabase
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
    ```
 
 4. Запустить dev-сервер:
@@ -164,11 +182,9 @@ src/
 
 Текущие:
 - `OPENAI_API_KEY` - API ключ OpenAI для генерации караоке
-
-Планируемые:
 - `DATABASE_URL` - URL подключения к PostgreSQL (Supabase)
-- `SUPABASE_URL` - URL проекта Supabase
-- `SUPABASE_ANON_KEY` - Анонимный ключ Supabase
+- `NEXT_PUBLIC_SUPABASE_URL` - URL проекта Supabase
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Анонимный ключ Supabase
 
 ## 🎯 Пример использования
 
